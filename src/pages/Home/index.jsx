@@ -7,7 +7,7 @@ import fetcher from "../../utils/fetcher";
 import jwt_decode from "jwt-decode";
 import { getCookie } from "../../utils/getCookie";
 import jwtDecode from "jwt-decode";
-import loginFetcher from "../../utils/reissueFetcher";
+import reissueFetcher from "../../utils/reissueFetcher";
 const Container = styled.div`
   flex-grow: 1;
 `;
@@ -19,7 +19,7 @@ const BoardContainer = styled.div`
 `;
 
 const Home = () => {
-  const { data: tokens } = useSWR("http://localhost:8080/api/v1/reissue", loginFetcher, {
+  const { data: tokens } = useSWR("http://localhost:8080/api/v1/reissue", reissueFetcher, {
     dedupingInterval: 1000 * 60 * 30,
   });
 
@@ -27,6 +27,7 @@ const Home = () => {
 
   const jwt = useCallback(() => {
     // let decoded = jwt_decode(tokens.accessToken);
+    console.log(document.cookie);
     console.log(tokens);
     const accessToken = getCookie("accessToken");
     const refreshToken = getCookie("refreshToken");

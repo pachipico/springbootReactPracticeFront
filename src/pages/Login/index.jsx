@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import useSWR from "swr";
-import loginFetcher from "../../utils/reissueFetcher";
+import reissueFetcher from "../../utils/reissueFetcher";
 import { setCookie } from "../../utils/setCookie";
 
 const Container = styled.div`
@@ -55,7 +55,7 @@ const Login = ({ rememberToken, handleLogin }) => {
   const [loginData, setLoginData] = useState({ accessToken: "", refreshToken: "" });
   const { data: tokens } = useSWR(
     tryLogin ? "http://localhost:8080/api/v1/reissue" : null,
-    (url) => loginFetcher(url),
+    (url) => reissueFetcher(url),
     { dedupingInterval: 1000 * 60 * 30 }
   );
   const history = useHistory();
@@ -84,17 +84,17 @@ const Login = ({ rememberToken, handleLogin }) => {
               accessToken: response.data.data.accessToken,
               refreshToken: response.data.data.refreshToken,
             });
-            // console.log(loginData);
+            console.log(loginData);
           }
         });
     },
-    [inputValue]
+    [inputValue, loginData]
   );
+
   if (tokens?.accessToken) {
+    history.push("/");
     setCookie("accessToken", tokens?.accessToken);
     setCookie("refreshToken", tokens?.refreshToken);
-
-    history.push("/");
   }
   return (
     <Container>

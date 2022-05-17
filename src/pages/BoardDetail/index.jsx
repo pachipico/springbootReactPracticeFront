@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import useSWR from "swr";
 import fetcher from "../../utils/fetcher";
@@ -7,14 +7,22 @@ import { parseToken } from "../../utils/parseToken";
 
 const BoardDetail = () => {
   const { data: tokens } = useSWR("http://localhost:8080/api/v1/reissue");
-  let decoded = parseToken(tokens?.accessToken);
+  const [decoded, setDecoded] = useState();
   const history = useHistory();
-
+  useEffect(() => {
+    if (tokens?.accessToken) {
+      setDecoded(parseToken(tokens?.accessToken));
+    } else {
+      alert("로그인이 필요한 서비스 입니다.");
+      history.push("/login");
+    }
+  }, []);
+  console.log(tokens);
   const { bid } = useParams();
   const { data: boardData } = useSWR(`http://localhost:8080/api/v1/board/${bid}`, (url) =>
     fetcher(url, tokens.accessToken)
   );
-  console.log(bid, boardData);
+  // console.log(bid, boardData);
   const handleModBtnClick = useCallback(() => {
     history.push(`/board/mod/${boardData?.data.bid}`, { board: boardData.data });
   }, [boardData, history]);
@@ -32,10 +40,6 @@ const BoardDetail = () => {
       });
   }, [boardData, history, tokens]);
 
-  if (!tokens?.accessToken) {
-    alert("로그인이 필요한 서비스 입니다.");
-    history.push("/login");
-  }
   return (
     <div>
       <h1>{boardData?.data.title}</h1>
