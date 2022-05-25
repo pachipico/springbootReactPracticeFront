@@ -38,17 +38,20 @@ const BoardDetail = () => {
     alert("해당 보드를 찾을 수 없습니다.");
     history.push("/");
   }
+  console.log("dd");
   return (
-    <div>
-      <h1>{boardData?.data.title}</h1>
-      <h4>{boardData?.data.content}</h4>
-      {decoded?.email == boardData?.data.writer && (
-        <>
-          <button onClick={handleModBtnClick}>Mod</button>
-          <button onClick={handleDelBtnClick}>Del</button>
-        </>
-      )}
-    </div>
+    boardData && (
+      <div>
+        <h1>{boardData?.data.title}</h1>
+        <h4>{boardData?.data.content}</h4>
+        {decoded?.email == boardData?.data.writer && (
+          <>
+            <button onClick={handleModBtnClick}>Mod</button>
+            <button onClick={handleDelBtnClick}>Del</button>
+          </>
+        )}
+      </div>
+    )
   );
 };
 

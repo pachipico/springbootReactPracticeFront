@@ -31,8 +31,10 @@ const Home = () => {
     console.log(tokens);
     const accessToken = getCookie("accessToken");
     const refreshToken = getCookie("refreshToken");
-    console.log("cookie access", accessToken, jwtDecode(accessToken));
-    console.log("cookie refresh", refreshToken, jwtDecode(refreshToken));
+    if (accessToken && refreshToken) {
+      console.log("cookie access", accessToken, jwtDecode(accessToken));
+      console.log("cookie refresh", refreshToken, jwtDecode(refreshToken));
+    }
   }, [tokens]);
 
   return (
