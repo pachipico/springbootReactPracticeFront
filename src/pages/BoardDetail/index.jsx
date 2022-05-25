@@ -6,20 +6,12 @@ import fetcher from "../../utils/fetcher";
 import { parseToken } from "../../utils/parseToken";
 
 const BoardDetail = () => {
-  const { data: tokens } = useSWR("http://localhost:8080/api/v1/reissue");
+  const { data: tokens, error: tokenError } = useSWR("http://localhost:8080/api/v1/reissue");
   const [decoded, setDecoded] = useState();
   const history = useHistory();
-  useEffect(() => {
-    if (tokens?.accessToken) {
-      setDecoded(parseToken(tokens?.accessToken));
-    } else {
-      alert("로그인이 필요한 서비스 입니다.");
-      history.push("/login");
-    }
-  }, []);
-  console.log(tokens);
+
   const { bid } = useParams();
-  const { data: boardData } = useSWR(`http://localhost:8080/api/v1/board/${bid}`, (url) =>
+  const { data: boardData, error: boardError } = useSWR(`http://localhost:8080/api/v1/board/${bid}`, (url) =>
     fetcher(url, tokens.accessToken)
   );
   // console.log(bid, boardData);
@@ -39,7 +31,13 @@ const BoardDetail = () => {
         }
       });
   }, [boardData, history, tokens]);
-
+  if (!tokens?.accessToken && tokenError) {
+    alert("로그인이 필요한 서비스 입니다.");
+    history.push("/login");
+  } else if (boardError) {
+    alert("해당 보드를 찾을 수 없습니다.");
+    history.push("/");
+  }
   return (
     <div>
       <h1>{boardData?.data.title}</h1>

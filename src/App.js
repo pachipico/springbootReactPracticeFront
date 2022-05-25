@@ -34,7 +34,7 @@ function App() {
         <Route path="/login" render={() => <Login />} />
         <Route exact path="/board/register" render={() => <RegisterBoard />} />
         <Route path="/board/mod/:bid" component={BoardMod} />
-        <Route path="/board/:bid" component={BoardDetail} />
+        <Route path="/board/:bid" render={() => <BoardDetail tokens={tokens} />} />
         <Route path="/signup" component={SignUp} />
       </Switch>
     </div>
